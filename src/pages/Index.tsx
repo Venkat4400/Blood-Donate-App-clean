@@ -1,13 +1,36 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { Header } from "@/components/layout/Header";
+import { Footer } from "@/components/layout/Footer";
+import { HeroSection } from "@/components/home/HeroSection";
+import { FeaturesSection } from "@/components/home/FeaturesSection";
+import { HowItWorksSection } from "@/components/home/HowItWorksSection";
+import { BloodAvailabilitySection } from "@/components/home/BloodAvailabilitySection";
+import { TestimonialsSection } from "@/components/home/TestimonialsSection";
+import { CTASection } from "@/components/home/CTASection";
+import { Helmet } from "react-helmet-async";
 
 const Index = () => {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <>
+      <Helmet>
+        <title>LifeFlow - Smart Blood Donation & Emergency Management Platform</title>
+        <meta 
+          name="description" 
+          content="Connect with blood donors, find blood banks, and save lives with LifeFlow. Real-time matching, emergency SOS, and a community of 50,000+ verified donors." 
+        />
+      </Helmet>
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main>
+          <HeroSection />
+          <FeaturesSection />
+          <HowItWorksSection />
+          <BloodAvailabilitySection />
+          <TestimonialsSection />
+          <CTASection />
+        </main>
+        <Footer />
       </div>
-    </div>
+    </>
   );
 };
 
