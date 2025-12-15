@@ -16,18 +16,18 @@ import {
 import { Link } from "react-router-dom";
 
 const teamMembers = [
+  { name: "VENKAT", role: "Founder & Project Lead", avatar: "VK" },
   { name: "Dr. Aisha Patel", role: "Chief Medical Advisor", avatar: "AP" },
-  { name: "Rahul Sharma", role: "Founder & CEO", avatar: "RS" },
   { name: "Priya Gupta", role: "Head of Operations", avatar: "PG" },
   { name: "Vikram Singh", role: "Technology Lead", avatar: "VS" },
 ];
 
 const milestones = [
-  { year: "2020", title: "Founded", description: "Started with a vision to transform blood donation" },
-  { year: "2021", title: "10K Donors", description: "Reached our first major milestone" },
-  { year: "2022", title: "100 Partners", description: "Onboarded 100+ hospitals and blood banks" },
-  { year: "2023", title: "50K+ Lives", description: "Facilitated saving 50,000+ lives" },
-  { year: "2024", title: "AI Matching", description: "Launched AI-powered donor matching system" },
+  { year: "2020", title: "The Spark", description: "A personal experience with blood shortage ignited the mission" },
+  { year: "2021", title: "Research Phase", description: "Studied healthcare systems across India and global best practices" },
+  { year: "2022", title: "Development", description: "Built the core platform with GPS, AI matching, and real-time features" },
+  { year: "2023", title: "Beta Launch", description: "Partnered with 50+ hospitals for pilot testing" },
+  { year: "2024", title: "Full Launch", description: "Launched AI-powered donor matching across major Indian cities" },
 ];
 
 const About = () => {
@@ -114,10 +114,13 @@ const About = () => {
           <div className="container mx-auto px-4">
             <div className="text-center max-w-2xl mx-auto mb-16">
               <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mb-4">
-                Our Journey
+                Our Long Journey
               </h2>
-              <p className="text-muted-foreground">
-                From a small idea to a platform that's saving thousands of lives.
+              <p className="text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+                What started as a deeply personal experience transformed into a mission to revolutionize emergency healthcare in India. 
+                After witnessing the devastating impact of blood shortages firsthand, VENKAT embarked on a journey to build a platform 
+                that could bridge the gap between donors and those in desperate need. This isn't just a technology project—it's a 
+                movement to ensure that no family ever has to face the tragedy of losing a loved one due to unavailable blood.
               </p>
             </div>
             <div className="max-w-3xl mx-auto">

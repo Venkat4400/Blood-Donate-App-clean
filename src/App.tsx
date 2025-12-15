@@ -15,6 +15,7 @@ import Login from "./pages/Login";
 import About from "./pages/About";
 import Education from "./pages/Education";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
 
 const queryClient = new QueryClient();
 
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/login" element={<Login />} />
               <Route path="/about" element={<About />} />
               <Route path="/education" element={<Education />} />
+              <Route path="/dashboard" element={<Dashboard />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
             <FloatingSOSButton />
