@@ -1,10 +1,11 @@
-import { useState, useCallback, memo, useEffect } from "react";
+import { useState, useCallback, memo, useEffect, useMemo } from "react";
 import { GoogleMap, Marker, InfoWindow, MarkerClusterer } from "@react-google-maps/api";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Phone, Navigation, Clock, Shield, Star, Loader2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useGoogleMaps } from "./GoogleMapsProvider";
 
 interface BloodBank {
   id: string;
@@ -75,6 +76,7 @@ function LiveBloodBankMapComponent({
   height = "500px",
   showClusters = true,
 }: LiveBloodBankMapProps) {
+  const { isLoaded } = useGoogleMaps();
   const [selectedBank, setSelectedBank] = useState<BloodBank | null>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -94,19 +96,22 @@ function LiveBloodBankMapComponent({
     height,
   };
 
-  const mapOptions: google.maps.MapOptions = {
-    disableDefaultUI: false,
-    zoomControl: true,
-    streetViewControl: false,
-    mapTypeControl: false,
-    fullscreenControl: true,
-    styles: isDarkMode ? darkMapStyles : mapStyles,
-  };
+  const mapOptions = useMemo(() => {
+    if (!isLoaded) return {};
+    return {
+      disableDefaultUI: false,
+      zoomControl: true,
+      streetViewControl: false,
+      mapTypeControl: false,
+      fullscreenControl: true,
+      styles: isDarkMode ? darkMapStyles : mapStyles,
+    } as google.maps.MapOptions;
+  }, [isLoaded, isDarkMode]);
 
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
     
-    if (bloodBanks.length > 0) {
+    if (bloodBanks.length > 0 && isLoaded) {
       const bounds = new google.maps.LatLngBounds();
       bloodBanks.forEach((bank) => {
         bounds.extend({ lat: bank.latitude, lng: bank.longitude });
@@ -116,7 +121,7 @@ function LiveBloodBankMapComponent({
       }
       map.fitBounds(bounds);
     }
-  }, [bloodBanks, userLocation]);
+  }, [bloodBanks, userLocation, isLoaded]);
 
   const handleMarkerClick = (bank: BloodBank) => {
     setSelectedBank(bank);
@@ -133,7 +138,9 @@ function LiveBloodBankMapComponent({
     window.open(url, "_blank");
   };
 
-  const createMarkerIcon = (isVerified: boolean, is24x7: boolean) => {
+  const createMarkerIcon = useCallback((isVerified: boolean, is24x7: boolean) => {
+    if (!isLoaded) return undefined;
+    
     const color = isVerified ? "#DC2626" : "#6B7280";
     return {
       url: "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(`
@@ -152,9 +159,9 @@ function LiveBloodBankMapComponent({
       scaledSize: new google.maps.Size(40, 50),
       anchor: new google.maps.Point(20, 50),
     };
-  };
+  }, [isLoaded]);
 
-  if (loading) {
+  if (loading || !isLoaded) {
     return (
       <Card className="overflow-hidden">
         <div 
@@ -170,6 +177,17 @@ function LiveBloodBankMapComponent({
     );
   }
 
+  const userLocationIcon = {
+    path: google.maps.SymbolPath.CIRCLE,
+    scale: 12,
+    fillColor: "#3B82F6",
+    fillOpacity: 1,
+    strokeColor: "#fff",
+    strokeWeight: 3,
+  };
+
+  const markerAnimation = google.maps.Animation.DROP;
+
   return (
     <Card className="overflow-hidden shadow-lg">
       <GoogleMap
@@ -183,14 +201,7 @@ function LiveBloodBankMapComponent({
         {userLocation && (
           <Marker
             position={userLocation}
-            icon={{
-              path: google.maps.SymbolPath.CIRCLE,
-              scale: 12,
-              fillColor: "#3B82F6",
-              fillOpacity: 1,
-              strokeColor: "#fff",
-              strokeWeight: 3,
-            }}
+            icon={userLocationIcon}
             title="Your Location"
             zIndex={1000}
           />
@@ -208,7 +219,7 @@ function LiveBloodBankMapComponent({
                     onClick={() => handleMarkerClick(bank)}
                     clusterer={clusterer}
                     icon={createMarkerIcon(bank.is_verified || false, bank.is_24x7 || false)}
-                    animation={google.maps.Animation.DROP}
+                    animation={markerAnimation}
                   />
                 ))}
               </>
@@ -221,7 +232,7 @@ function LiveBloodBankMapComponent({
               position={{ lat: bank.latitude, lng: bank.longitude }}
               onClick={() => handleMarkerClick(bank)}
               icon={createMarkerIcon(bank.is_verified || false, bank.is_24x7 || false)}
-              animation={google.maps.Animation.DROP}
+              animation={markerAnimation}
             />
           ))
         )}
