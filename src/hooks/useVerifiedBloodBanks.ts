@@ -300,37 +300,13 @@ export function useVerifiedBloodBanks(options: UseVerifiedBloodBanksOptions = {}
   
   const estimateTravelTime = (distanceKm: number): number => Math.round((distanceKm / 30) * 60);
 
-  // Seed blood banks if database is empty
-  const seedBloodBanks = async () => {
-    try {
-      const { data: existingBanks, error: checkError } = await supabase
-        .from("blood_banks")
-        .select("id")
-        .limit(1);
-
-      if (checkError) throw checkError;
-
-      if (!existingBanks || existingBanks.length === 0) {
-        const { error: insertError } = await supabase
-          .from("blood_banks")
-          .insert(VERIFIED_BLOOD_BANKS_SEED);
-
-        if (insertError) {
-          console.error("Error seeding blood banks:", insertError);
-        }
-      }
-    } catch (err) {
-      console.error("Error checking/seeding blood banks:", err);
-    }
-  };
+  // Note: Blood banks are seeded via database migration, not client-side
+  // This avoids RLS policy violations for anonymous users
 
   const fetchBloodBanks = async () => {
     try {
       setLoading(true);
       setError(null);
-
-      // First seed if needed
-      await seedBloodBanks();
 
       let query = supabase.from("blood_banks").select("*");
 
@@ -373,6 +349,24 @@ export function useVerifiedBloodBanks(options: UseVerifiedBloodBanksOptions = {}
     }
   }, [latitude, longitude, locationLoading, radiusKm, onlyVerified, bloodType]);
 
+  // Real-time subscription for blood banks updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('blood-banks-realtime')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'blood_banks' },
+        () => {
+          fetchBloodBanks();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [latitude, longitude, radiusKm, onlyVerified]);
+
   const refetch = () => {
     fetchBloodBanks();
   };
@@ -383,5 +377,6 @@ export function useVerifiedBloodBanks(options: UseVerifiedBloodBanksOptions = {}
     error,
     refetch,
     userLocation: latitude && longitude ? { lat: latitude, lng: longitude } : null,
+    locationError: geolocation.error,
   };
 }
