@@ -31,7 +31,7 @@ const Login = () => {
 
   useEffect(() => {
     if (user && !authLoading) {
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [user, authLoading, navigate]);
 
@@ -66,7 +66,7 @@ const Login = () => {
       }
     } else {
       toast.success("Welcome back!");
-      navigate("/");
+      navigate("/dashboard");
     }
   };
 
@@ -164,7 +164,7 @@ const Login = () => {
             <p className="text-center text-muted-foreground mt-6">
               Don't have an account?{" "}
               <Link to="/register" className="text-primary font-medium hover:underline">
-                Register as Donor
+                Create Account
               </Link>
             </p>
           </div>
