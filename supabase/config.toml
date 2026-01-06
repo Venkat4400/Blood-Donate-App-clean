@@ -1,0 +1,4 @@
+project_id = "iscircyhecudmmolgpsg"
+
+[functions.match-donors]
+verify_jwt = false
