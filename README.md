@@ -1,5 +1,5 @@
 ## Author
-Kota Venkat
+venkat
 
 > Personal project developed for learning and academic purposes.
 

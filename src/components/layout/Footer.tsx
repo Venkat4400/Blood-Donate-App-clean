@@ -93,7 +93,7 @@ export function Footer() {
 
         <div className="mt-12 pt-8 border-t border-secondary-foreground/10 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-secondary-foreground/50">
-            © 2024 LifeFlow. All rights reserved. Made with ❤️ for humanity.
+            © 2024 LifeFlow. All rights reserved. Made with ❤️ by Venkat.
           </p>
           <div className="flex gap-6">
             <a href="#" className="text-sm text-secondary-foreground/50 hover:text-primary transition-colors">Privacy Policy</a>
