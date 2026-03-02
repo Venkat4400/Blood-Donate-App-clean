@@ -1,13 +1,3 @@
-## Author
-venkat
-
-> Personal project developed for learning and academic purposes.
-
-Great 👍 Venkat, here is a **professional README file** and a **short About section** for your project.
-
-You can directly copy this into your `README.md`.
-
----
 
 # 🔴 Blood Donation Web App
 
